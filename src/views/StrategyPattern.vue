@@ -1,22 +1,7 @@
-<script setup lang="ts">
-</script>
-
 <template>
-  <div>
-    <h2>
-        Strategy Pattern
-    </h2>
-    <p> 
-        <b>
-            Overview: 
-        </b>
-        Is a design pattern that let define a family of algorithms, put each of them into a separate class, and make their objects interchangeable
-        <quote>
-            
-        </quote>
-    </p>
-  </div>
+  <TransportationStrategy />
 </template>
 
-<style scoped>
-</style>
+<script setup>
+import TransportationStrategy from '../components/design-patterns/strategy-pattern/TransportationStrategy.vue';
+</script>
