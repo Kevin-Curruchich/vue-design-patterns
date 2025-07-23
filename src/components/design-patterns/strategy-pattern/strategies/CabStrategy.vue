@@ -5,11 +5,11 @@
       data-test-id="estimated-time"
     >
     Estimated time: {{ estimatedTime }}
-  </p>
+    </p>
     <p
       data-test-id="cost"
     >
-      Cost: {{ cost }}
+      Cost: {{ cost }} * {{ tripPartners }}  = {{ strategyTotalCost }}
     </p>
     <div>
       <h4>Route:</h4>
@@ -17,15 +17,30 @@
         <li class="stop" v-for="stop in stops" :key="stop">{{ stop }}</li>
       </ul>
     </div>
+    <button @click="onRecalculate">
+      <span>Recalculate</span>
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<
+import { computed } from 'vue';
+import useTrip from '../composables/useTrip';
+
+const props = defineProps<
 {
   stops: string[],
   estimatedTime: String,
-  cost: String,
+  cost: number,
 }
 >();
+const emit = defineEmits<{recalculate: [id: string]}>()
+
+//instances
+const { tripPartners, strategyTotalCost} = useTrip({costPerPartner: props.cost})
+
+const onRecalculate = ()=>{
+  emit('recalculate', 'cab')
+}
+
 </script>

@@ -2,48 +2,92 @@
   <div>
     <h2>Transportation Strategy</h2>
     <p>Select a transportation strategy to get to the airport:</p>
-    <select v-model="selectedStrategy">
-      <option value="bus">Bus</option>
-      <option value="cab">Cab</option>
-      <option value="bicycle">Bicycle</option>
+    <select v-model="selectedStrategy" :disabled="loading">
+      <option v-for="key in Object.keys(strategies)" :key="key" :value="key">
+        {{ key.charAt(0).toUpperCase() + key.slice(1) }}
+      </option>
     </select>
-    <div v-if="selectedStrategy">
+
+    <div>
+      <button @click="decreaseTripPartners">-</button>
+      <span>{{ tripPartners }}</span>
+      <button @click="increaseTripPartners">+</button>
+    </div>
+
+    <div v-if="loading">
+      <p>Loading strategy data...</p>
+    </div>
+    <div v-else-if="selectedStrategy && strategies[selectedStrategy]">
       <component
         :is="strategies[selectedStrategy].component"
         :stops="strategies[selectedStrategy].stops"
         :estimated-time="strategies[selectedStrategy].estimatedTime"
         :cost="strategies[selectedStrategy].cost"
+        @recalculate="onRecalculate"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive, ref, onMounted, markRaw } from 'vue';
+import useTrip from './composables/useTrip';
 import BusStrategy from './strategies/BusStrategy.vue';
 import CabStrategy from './strategies/CabStrategy.vue';
 import BicycleStrategy from './strategies/BicycleStrategy.vue';
+import { getInitialStrategiesData, getRecalculatedStrategyData } from './api/strategyData.ts';
+
+const {
+  tripPartners,
+  increaseTripPartners,
+  decreaseTripPartners,
+  initializeTripPartners
+} = useTrip();
 
 const selectedStrategy = ref('bus');
+const loading = ref(true);
 
-const strategies = {
+const strategies = reactive({
   bus: {
-    component: BusStrategy,
-    stops: ['Stop A', 'Stop B', 'Airport'],
-    estimatedTime: '1 hour',
-    cost: '$5',
+    component: markRaw(BusStrategy),
+    stops: [],
+    estimatedTime: '',
+    cost: 0,
   },
   cab: {
-    component: CabStrategy,
-    stops: ['Your Location', 'Airport'],
-    estimatedTime: '1 hour',
-    cost: '$5',
+    component: markRaw(CabStrategy),
+    stops: [],
+    estimatedTime: '',
+    cost: 0,
   },
   bicycle: {
-    component: BicycleStrategy,
-    stops: [{name: 'Your Location', timeInStop: 10}, {name: 'Scenic Route', timeInStop: 5}, {name: 'Airport', timeInStop: 15}],
-    estimatedTime: '2 hours',
-    cost: '$0',
+    component: markRaw(BicycleStrategy),
+    stops: [],
+    estimatedTime: '',
+    cost: 0,
   },
+});
+
+onMounted(async () => {
+  loading.value = true;
+  const initialData = await getInitialStrategiesData();
+  for (const key in initialData) {
+    if (strategies[key]) {
+      strategies[key].stops = initialData[key].stops;
+      strategies[key].estimatedTime = initialData[key].estimatedTime;
+      strategies[key].cost = initialData[key].cost;
+    }
+  }
+  loading.value = false;
+});
+
+const onRecalculate = async (strategyKey: string) => {
+  initializeTripPartners(1);
+  const recalculatedData = await getRecalculatedStrategyData(strategyKey);
+  if (strategies[strategyKey]) {
+    strategies[strategyKey].stops = recalculatedData.stops;
+    strategies[strategyKey].estimatedTime = recalculatedData.estimatedTime;
+    strategies[strategyKey].cost = recalculatedData.cost;
+  }
 };
 </script>
