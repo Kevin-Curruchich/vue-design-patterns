@@ -4,7 +4,7 @@ import CabStrategy from "@/components/design-patterns/strategy-pattern/strategie
 describe('<CabStrategy />', ()=> {
 
     const props = {
-        cost: '10',
+        cost: 10,
         stops: ['Stop A', 'Stop B', 'Airport'],
         estimatedTime: '1 hour'
     }
@@ -38,6 +38,17 @@ describe('<CabStrategy />', ()=> {
             expect(listItems[index].text()).toContain(stop)
         })
 
+    })
+
+    test('Should emit recalculate event when button is clicked', async ()=>{
+
+        const button = wrapper.find('button')
+
+        await button.trigger('click')
+        
+        expect(wrapper.emitted('recalculate')).toBeTruthy()
+        expect(wrapper.emitted('recalculate')?.[0]).toEqual(['cab'])
+        
     })
     
 })

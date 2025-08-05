@@ -1,4 +1,4 @@
-import { computed, reactive, readonly, toRef } from "vue"
+import { computed, onMounted, reactive, readonly, toRef } from "vue"
 
 interface TripStrategyData {
     costPerPartner: number,
@@ -34,6 +34,10 @@ export default (tripStrategyData: TripStrategyData = {costPerPartner: 10}) => {
     }
 
     const strategyTotalCost = computed(()=> tripStrategyData.costPerPartner * state.tripPartners )
+
+    onMounted(() => {
+        initializeTripPartners()
+    })
 
 
     return {
