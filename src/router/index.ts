@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import StrategyPattern from '@/views/StrategyPattern.vue';
 import BuilderPattern from '@/views/BuilderPattern.vue';
+import HumbleComponentsPattern from '@/views/HumbleComponentsPattern.vue';
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     path: '/builder-pattern',
     name: 'BuilderPattern',
     component: BuilderPattern,
+  },
+  {
+    path: '/humble-components-pattern',
+    name: 'HumbleComponentsPattern',
+    component: HumbleComponentsPattern,
   },
 ];
 

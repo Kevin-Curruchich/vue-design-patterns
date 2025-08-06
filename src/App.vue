@@ -3,6 +3,7 @@
     <nav class="nav">
       <router-link class="nav-link" to="/strategy-pattern">Strategy Pattern</router-link>
       <router-link class="nav-link" to="/builder-pattern">Builder Pattern</router-link>
+      <router-link class="nav-link" to="/humble-components-pattern">Humble Components Pattern</router-link>
     </nav>
     <router-view />
   </div>

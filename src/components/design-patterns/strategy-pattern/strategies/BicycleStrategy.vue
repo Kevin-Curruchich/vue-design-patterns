@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
 import useTrip from "../composables/useTrip";
 
 const props = defineProps<{
