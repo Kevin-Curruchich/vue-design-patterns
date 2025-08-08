@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import StrategyPattern from '@/views/StrategyPattern.vue';
 import BuilderPattern from '@/views/BuilderPattern.vue';
 import HumbleComponentsPattern from '@/views/HumbleComponentsPattern.vue';
+import DebounceSearch from '@/views/DebounceSearch.vue';
 
 const routes = [
   {
@@ -22,6 +23,11 @@ const routes = [
     path: '/humble-components-pattern',
     name: 'HumbleComponentsPattern',
     component: HumbleComponentsPattern,
+  },
+  {
+    path: '/debounce-search',
+    name: 'DebounceSearch',
+    component: DebounceSearch,
   },
 ];
 
